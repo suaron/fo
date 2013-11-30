@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>~/code/form_objects/fo/app/forms/sign_up_form.rb.html</title>
+<meta name="Generator" content="Vim/7.4">
+<meta name="plugin-version" content="vim7.4_v1">
+<meta name="syntax" content="ruby">
+<meta name="settings" content="number_lines,use_css,no_foldcolumn,expand_tabs,line_ids,prevent_copy=">
+<meta name="colorscheme" content="solarized">
+<style type="text/css">
+<!--
+pre { font-family: monospace; color: #808080;  }
+body { font-family: monospace; color: #808080;  }
+* { font-size: 1em; }
+.LineNr { color: #4e4e4e; padding-bottom: 1px; }
+.rubyDefine { color: #8a8a8a;  padding-bottom: 1px; font-weight: bold; }
+.Comment { color: #4e4e4e; }
+.Constant { color: #00afaf; }
+.Special { color: #af0000; }
+.Identifier { color: #0087ff; }
+.Statement { color: #5f8700; }
+.PreProc { color: #d75f00; }
+.Type { color: #af8700; }
+-->
+</style>
+
+<script type='text/javascript'>
+<!--
+
+/* function to open any folds containing a jumped-to line before jumping to it */
+function JumpToLine()
+{
+  var lineNum;
+  lineNum = window.location.hash;
+  lineNum = lineNum.substr(1); /* strip off '#' */
+
+  if (lineNum.indexOf('L') == -1) {
+    lineNum = 'L'+lineNum;
+  }
+  lineElem = document.getElementById(lineNum);
+  /* Always jump to new location even if the line was hidden inside a fold, or
+   * we corrected the raw number to a line ID.
+   */
+  if (lineElem) {
+    lineElem.scrollIntoView(true);
+  }
+  return true;
+}
+if ('onhashchange' in window) {
+  window.onhashchange = JumpToLine;
+}
+
+-->
+</script>
+</head>
+<body onload='JumpToLine();'>
+<pre id='vimCodeElement'>
+<span id="L1" class="LineNr"> 1 </span><span class="rubyDefine">class</span> <span class="Type">SignUpForm</span>
+<span id="L2" class="LineNr"> 2 </span>  <span class="PreProc">include</span> <span class="Type">ActiveModel</span>::<span class="Type">Model</span>
+<span id="L3" class="LineNr"> 3 </span>
+<span id="L4" class="LineNr"> 4 </span>  <span class="Statement">attr_reader</span> <span class="Constant">:user</span>
+<span id="L5" class="LineNr"> 5 </span>  <span class="Statement">attr_reader</span> <span class="Constant">:items</span>
+<span id="L6" class="LineNr"> 6 </span>
+<span id="L7" class="LineNr"> 7 </span>  validate <span class="Constant">:at_least_one_item_should_be_presence</span>
+<span id="L8" class="LineNr"> 8 </span>  <span class="rubyDefine">def</span> <span class="Identifier">at_least_one_item_should_be_presence</span>
+<span id="L9" class="LineNr"> 9 </span>    <span class="Statement">if</span> <span class="Identifier">@items</span>.empty?
+<span id="L10" class="LineNr">10 </span>      errors.add(<span class="Constant">:items</span>, <span class="Special">'</span><span class="Constant">at least one should be present</span><span class="Special">'</span>)
+<span id="L11" class="LineNr">11 </span>    <span class="Statement">end</span>
+<span id="L12" class="LineNr">12 </span>  <span class="rubyDefine">end</span>
+<span id="L13" class="LineNr">13 </span>
+<span id="L14" class="LineNr">14 </span>  <span class="rubyDefine">def</span> <span class="Identifier">initialize</span>(<span class="Identifier">params</span> = {})
+<span id="L15" class="LineNr">15 </span>    <span class="Identifier">@user</span> = <span class="Type">User</span>.new(user_params(<span class="Identifier">params</span>))
+<span id="L16" class="LineNr">16 </span>    <span class="Identifier">@items</span> = build_items(items_params(<span class="Identifier">params</span>))
+<span id="L17" class="LineNr">17 </span>  <span class="rubyDefine">end</span>
+<span id="L18" class="LineNr">18 </span>
+<span id="L19" class="LineNr">19 </span>  <span class="rubyDefine">def</span> <span class="Identifier">save</span>
+<span id="L20" class="LineNr">20 </span>    valid? &amp;&amp; persist
+<span id="L21" class="LineNr">21 </span>  <span class="rubyDefine">end</span>
+<span id="L22" class="LineNr">22 </span>
+<span id="L23" class="LineNr">23 </span>  <span class="rubyDefine">def</span> <span class="Identifier">valid?</span>
+<span id="L24" class="LineNr">24 </span>    <span class="Statement">super</span>
+<span id="L25" class="LineNr">25 </span>    <span class="Identifier">@user</span>.valid?
+<span id="L26" class="LineNr">26 </span>    <span class="Identifier">@items</span>.each(&amp;<span class="Constant">:valid?</span>)
+<span id="L27" class="LineNr">27 </span>    errors.empty? &amp;&amp; <span class="Identifier">@user</span>.errors.empty? &amp;&amp; <span class="Identifier">@items</span>.all?{ |<span class="Identifier">item</span>| item.errors.empty? }
+<span id="L28" class="LineNr">28 </span>  <span class="rubyDefine">end</span>
+<span id="L29" class="LineNr">29 </span>
+<span id="L30" class="LineNr">30 </span>  <span class="rubyDefine">def</span> <span class="Identifier">error_full_messages</span>
+<span id="L31" class="LineNr">31 </span>    messages_list = errors.full_messages
+<span id="L32" class="LineNr">32 </span>    messages_list += <span class="Identifier">@user</span>.errors.full_messages
+<span id="L33" class="LineNr">33 </span>
+<span id="L34" class="LineNr">34 </span>    <span class="Identifier">@items</span>.each <span class="Statement">do</span> |<span class="Identifier">item</span>|
+<span id="L35" class="LineNr">35 </span>      messages_list += item.errors.full_messages
+<span id="L36" class="LineNr">36 </span>    <span class="Statement">end</span>
+<span id="L37" class="LineNr">37 </span>
+<span id="L38" class="LineNr">38 </span>    messages_list
+<span id="L39" class="LineNr">39 </span>  <span class="rubyDefine">end</span>
+<span id="L40" class="LineNr">40 </span>
+<span id="L41" class="LineNr">41 </span>  <span class="Statement">private</span>
+<span id="L42" class="LineNr">42 </span>  <span class="rubyDefine">def</span> <span class="Identifier">persist</span>
+<span id="L43" class="LineNr">43 </span>    <span class="Type">ActiveRecord</span>::<span class="Type">Base</span>.transaction <span class="Statement">do</span>
+<span id="L44" class="LineNr">44 </span>      company = <span class="Type">Company</span>.create!
+<span id="L45" class="LineNr">45 </span>      order = company.orders.create!
+<span id="L46" class="LineNr">46 </span>
+<span id="L47" class="LineNr">47 </span>      <span class="Identifier">@user</span>.company = company
+<span id="L48" class="LineNr">48 </span>      <span class="Identifier">@user</span>.save!
+<span id="L49" class="LineNr">49 </span>
+<span id="L50" class="LineNr">50 </span>      <span class="Identifier">@items</span>.each <span class="Statement">do</span> |<span class="Identifier">item</span>|
+<span id="L51" class="LineNr">51 </span>        item.order = order
+<span id="L52" class="LineNr">52 </span>        authorize_and_save(item)
+<span id="L53" class="LineNr">53 </span>      <span class="Statement">end</span>
+<span id="L54" class="LineNr">54 </span>
+<span id="L55" class="LineNr">55 </span>      <span class="Statement">return</span> <span class="Constant">true</span>
+<span id="L56" class="LineNr">56 </span>    <span class="Statement">end</span>
+<span id="L57" class="LineNr">57 </span>  <span class="rubyDefine">end</span>
+<span id="L58" class="LineNr">58 </span>
+<span id="L59" class="LineNr">59 </span>  <span class="Comment"># pseudo code</span>
+<span id="L60" class="LineNr">60 </span>  <span class="rubyDefine">def</span> <span class="Identifier">authorize_and_save</span>(object)
+<span id="L61" class="LineNr">61 </span>    <span class="Statement">if</span> current_ability.can?(<span class="Constant">:create</span>, object)
+<span id="L62" class="LineNr">62 </span>      object.save!
+<span id="L63" class="LineNr">63 </span>    <span class="Statement">else</span>
+<span id="L64" class="LineNr">64 </span>      errors.add(<span class="Constant">:security</span>, <span class="Special">&quot;</span><span class="Constant">not authorized for</span><span class="Special">&quot;</span>)
+<span id="L65" class="LineNr">65 </span>      <span class="Statement">raise</span> <span class="Type">ActiveRecord</span>::<span class="Type">Rollback</span>
+<span id="L66" class="LineNr">66 </span>    <span class="Statement">end</span>
+<span id="L67" class="LineNr">67 </span>  <span class="rubyDefine">end</span>
+<span id="L68" class="LineNr">68 </span>
+<span id="L69" class="LineNr">69 </span>  <span class="rubyDefine">def</span> <span class="Identifier">build_items</span>(items_attributes)
+<span id="L70" class="LineNr">70 </span>    items_attributes.map <span class="Statement">do</span> |<span class="Identifier">attributes</span>|
+<span id="L71" class="LineNr">71 </span>      <span class="Type">Item</span>.new(attributes)
+<span id="L72" class="LineNr">72 </span>    <span class="Statement">end</span>
+<span id="L73" class="LineNr">73 </span>  <span class="rubyDefine">end</span>
+<span id="L74" class="LineNr">74 </span>
+<span id="L75" class="LineNr">75 </span>  <span class="rubyDefine">def</span> <span class="Identifier">user_params</span>(<span class="Identifier">params</span>)
+<span id="L76" class="LineNr">76 </span>    <span class="Identifier">params</span>.fetch(<span class="Constant">:user</span>, {}).slice(<span class="Constant">:email</span>).to_hash
+<span id="L77" class="LineNr">77 </span>  <span class="rubyDefine">end</span>
+<span id="L78" class="LineNr">78 </span>
+<span id="L79" class="LineNr">79 </span>  <span class="rubyDefine">def</span> <span class="Identifier">items_params</span>(<span class="Identifier">params</span>)
+<span id="L80" class="LineNr">80 </span>    <span class="Comment"># input</span>
+<span id="L81" class="LineNr">81 </span>    <span class="Comment"># {</span>
+<span id="L82" class="LineNr">82 </span>    <span class="Comment">#   items =&gt; {</span>
+<span id="L83" class="LineNr">83 </span>    <span class="Comment">#     &quot;1&quot;=&gt;{</span>
+<span id="L84" class="LineNr">84 </span>    <span class="Comment">#       &quot;title&quot;=&gt;&quot;Some Title&quot;</span>
+<span id="L85" class="LineNr">85 </span>    <span class="Comment">#     }</span>
+<span id="L86" class="LineNr">86 </span>    <span class="Comment">#   }</span>
+<span id="L87" class="LineNr">87 </span>    <span class="Comment"># }</span>
+<span id="L88" class="LineNr">88 </span>    <span class="Comment">#</span>
+<span id="L89" class="LineNr">89 </span>    <span class="Comment"># output</span>
+<span id="L90" class="LineNr">90 </span>    <span class="Comment"># [</span>
+<span id="L91" class="LineNr">91 </span>    <span class="Comment">#   { &quot;title&quot; =&gt; &quot;Some Title&quot; }</span>
+<span id="L92" class="LineNr">92 </span>    <span class="Comment"># ]</span>
+<span id="L93" class="LineNr">93 </span>    <span class="Identifier">params</span>.fetch(<span class="Constant">:user</span>, {}).fetch(<span class="Constant">:items</span>, {}).values.map <span class="Statement">do</span> |<span class="Identifier">item_hash</span>|
+<span id="L94" class="LineNr">94 </span>      item_hash.slice(<span class="Constant">:title</span>).to_hash
+<span id="L95" class="LineNr">95 </span>    <span class="Statement">end</span>
+<span id="L96" class="LineNr">96 </span>  <span class="rubyDefine">end</span>
+<span id="L97" class="LineNr">97 </span>
+<span id="L98" class="LineNr">98 </span><span class="rubyDefine">end</span>
+</pre>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->

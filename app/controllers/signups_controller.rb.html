@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>~/code/form_objects/fo/app/controllers/signups_controller.rb.html</title>
+<meta name="Generator" content="Vim/7.4">
+<meta name="plugin-version" content="vim7.4_v1">
+<meta name="syntax" content="ruby">
+<meta name="settings" content="number_lines,use_css,no_foldcolumn,expand_tabs,line_ids,prevent_copy=">
+<meta name="colorscheme" content="solarized">
+<style type="text/css">
+<!--
+pre { font-family: monospace; color: #808080;}
+body { font-family: monospace; color: #808080;}
+* { font-size: 1em; }
+.Constant { color: #00afaf; }
+.LineNr { color: #4e4e4e; b padding-bottom: 1px; }
+.Identifier { color: #0087ff; }
+.Statement { color: #5f8700; }
+.Type { color: #af8700; }
+.rubyDefine { color: #8a8a8a;  padding-bottom: 1px; font-weight: bold; }
+-->
+</style>
+
+<script type='text/javascript'>
+<!--
+
+/* function to open any folds containing a jumped-to line before jumping to it */
+function JumpToLine()
+{
+  var lineNum;
+  lineNum = window.location.hash;
+  lineNum = lineNum.substr(1); /* strip off '#' */
+
+  if (lineNum.indexOf('L') == -1) {
+    lineNum = 'L'+lineNum;
+  }
+  lineElem = document.getElementById(lineNum);
+  /* Always jump to new location even if the line was hidden inside a fold, or
+   * we corrected the raw number to a line ID.
+   */
+  if (lineElem) {
+    lineElem.scrollIntoView(true);
+  }
+  return true;
+}
+if ('onhashchange' in window) {
+  window.onhashchange = JumpToLine;
+}
+
+-->
+</script>
+</head>
+<body onload='JumpToLine();'>
+<pre id='vimCodeElement'>
+<span id="L1" class="LineNr"> 1 </span><span class="rubyDefine">class</span> <span class="Type">SignupsController</span> &lt; <span class="Type">ApplicationController</span>
+<span id="L2" class="LineNr"> 2 </span>  <span class="rubyDefine">def</span> <span class="Identifier">new</span>
+<span id="L3" class="LineNr"> 3 </span>    <span class="Identifier">@signup_form</span> = <span class="Type">SignUpForm</span>.new
+<span id="L4" class="LineNr"> 4 </span>  <span class="rubyDefine">end</span>
+<span id="L5" class="LineNr"> 5 </span>
+<span id="L6" class="LineNr"> 6 </span>  <span class="rubyDefine">def</span> <span class="Identifier">create</span>
+<span id="L7" class="LineNr"> 7 </span>    <span class="Identifier">@signup_form</span> = <span class="Type">SignUpForm</span>.new(<span class="Identifier">params</span>)
+<span id="L8" class="LineNr"> 8 </span>    <span class="Statement">if</span> <span class="Identifier">@signup_form</span>.save
+<span id="L9" class="LineNr"> 9 </span>      <span class="Identifier">redirect_to</span> home_path
+<span id="L10" class="LineNr">10 </span>    <span class="Statement">else</span>
+<span id="L11" class="LineNr">11 </span>      <span class="Identifier">render</span> <span class="Constant">:new</span>
+<span id="L12" class="LineNr">12 </span>    <span class="Statement">end</span>
+<span id="L13" class="LineNr">13 </span>  <span class="rubyDefine">end</span>
+<span id="L14" class="LineNr">14 </span><span class="rubyDefine">end</span>
+</pre>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->

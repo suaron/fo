@@ -1,0 +1,41 @@
+<% if @signup_form.error_full_messages.present? %>
+  <% @signup_form.error_full_messages.each do |error| %>
+    <div class="alert alert-danger alert-dismissable">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <strong>Warning!</strong> <%= error %>
+    </div>
+  <% end %>
+<% end %>
+<%= form_for @signup_form.user, url: signup_path, html: { class: 'form-horizontal', role: 'form' } do |f| %>
+  <div class="form-group">
+    <%= f.label :email, class: 'col-sm-2 control-label' %>
+    <div class="col-sm-10">
+      <%= f.text_field :email, class: 'form-control', placeholder: "Email" %>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <div class="panel panel-default">
+        <div class="panel-body items-panel">
+          <% @signup_form.items.each_with_index do |item, index| %>
+            <%= f.fields_for "items", item, index: index do |item_form| %>
+              <%= render 'item', f: item_form %>
+            <% end %>
+          <% end %>
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <%= link_to 'Add Item', "#", class: 'btn', id: "add_new_item", data: { fields: add_new_item_template("items", Item.new, f, "item") } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <%= f.submit nil, class: 'btn btn-default' %>
+      <%= link_to 'Cancel', home_path, class: 'btn' %>
+    </div>
+  </div>
+<% end %>
